@@ -42,6 +42,11 @@
 //     } catch (e) {}
 //   }
 // }
+
+
+
+
+
 import 'dart:developer';
 import 'package:api/model.dart';
 import 'package:dio/dio.dart';
@@ -54,7 +59,7 @@ class ApiService {
       receiveTimeout: Duration(seconds: 10),
     ),
   );
-  Future<String?> login(UserModel user) async {
+  Future<String?> postData(UserModel user) async {
     try {
       final response = await dio.post(
         "/api/v1/auth/login",
@@ -75,17 +80,16 @@ class ApiService {
   Future<UserModel?> getUser(String token) async {
     try {
       final response = await dio.get(
-        "/api/v1/auth/profile",
+        "/api/v1/au th/profile",
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
-
-      log(response.data.toString());
+      // log(response.data.toString());
 
       if (response.statusCode == 200) {
         return UserModel.fromJson(response.data);
       }
     } catch (e) {
-      log("Profile error: $e");
+      // log("Profile error: $e");
     }
     return null;
   }

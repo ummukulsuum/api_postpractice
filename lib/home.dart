@@ -1,83 +1,85 @@
-// import 'package:api/home2.dart';
+// import 'dart:developer';
+
 // import 'package:api/model.dart';
 // import 'package:api/service.dart';
 // import 'package:flutter/material.dart';
 
-// class Home extends StatelessWidget {
-//   const Home({super.key});
+// class Home2 extends StatefulWidget {
+//   const Home2({super.key});
+
+//   @override
+//   State<Home2> createState() => _Home2State();
+// }
+
+// class _Home2State extends State<Home2> {
+//   UserModel? user;
+//   @override
+//   void initState() {
+
+//     // TODO: implement initState
+//     super.initState();
+//      getUser();
+//   }
+//   void getUser() async {
+//     final usermode = await ApiService().getUser();
+//     log(usermode?.email ?? 'email not found');
+//         setState(() {
+//       user = usermode;
+//     });
+//   }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     TextEditingController email = TextEditingController();
-//     TextEditingController password = TextEditingController();
-
 //     return Scaffold(
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           TextField(controller: email),
-//           TextField(controller: password),
-//           ElevatedButton(
-//             onPressed: () async {
-//               final UserModel datas = UserModel(
-//                 email: email.text,
-//                 password: password.text,
-//               );
-//               final respo = await ApiService().createUse(datas);
-//               if (respo != null) {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => Home2()),
-//                 );
-//               }
-//             },
-//             child: Text("done"),
-//           ),
-//         ],
-//       ),
+//       body: Center(child: Text(user?.email ?? 'email not found')),
 //     );
 //   }
 // }
-import 'package:api/home2.dart';
 import 'package:api/model.dart';
 import 'package:api/service.dart';
 import 'package:flutter/material.dart';
+class Home extends StatefulWidget {
+  final String token;
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+  const Home({super.key, required this.token});
+
+  @override
+  State<Home> createState() => _Home2State();
+}
+
+class _Home2State extends State<Home> {
+  UserModel? user;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  void loadUser() async {
+    final data = await ApiService().getUser(widget.token);
+
+    setState(() {
+      user = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
-
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(controller: email),
-          TextField(controller: password),
-          ElevatedButton(
-            onPressed: () async {
-              final user = UserModel(
-                email: email.text,
-                password: password.text,
-              );
-
-              final token = await ApiService().login(user);
-
-              if (token != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Home2(token: token),
-                  ),
-                );
-              }
-            },
-            child: Text("Login"),
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadiusGeometry.circular(180),
+              child: Image.network(user?.avatar ?? 'Image not found'),
+            ),
+            Text(user?.name ?? 'name not found'),
+            Text(user?.email ?? 'email not found'),
+            Text(user?.role ?? 'role not found'),
+          ],
+        ),
       ),
     );
   }

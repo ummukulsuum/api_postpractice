@@ -23,11 +23,11 @@ class UserModel {
       role: json['role'],
     //   password: json['password']
     );
-  }
-  Map<String, dynamic> toJson(){
+  }  
+  Map<String,dynamic>toJson(){
     return{
-        "email":email,
-        "password":password
+      'email':email,
+      'password':password,
     };
   }
 }
